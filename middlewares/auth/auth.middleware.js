@@ -57,6 +57,7 @@ module.exports = {
                 return next(new CustomError('Token not valid', 401));
             }
 
+            req.bearer_token = tokenInfo.bearer_token;
             req.user = tokenInfo.user;
 
             next();

@@ -1,10 +1,6 @@
 const {User} = require("../../dataBase");
 
 module.exports = {
-    findAll: (params = {}) => {
-        return User.find(params);
-    },
-
     findOne: (params = {}) => {
         return User.findOne(params);
     },
@@ -15,9 +11,5 @@ module.exports = {
 
     updateOne: (params = {}, userData, options = {new: true}) => {
         return User.findOneAndUpdate(params, userData, options);
-    },
-
-    deleteOne: (params = {}) => {
-        return User.deleteOne(params);
     },
 }

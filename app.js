@@ -5,7 +5,7 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
-const {signupRouter, signinRouter, infoRouter} = require("./routes");
+const {signupRouter, signinRouter, infoRouter, logoutRouter} = require("./routes");
 
 mongoose.connect(config.MONGO_URL);
 
@@ -17,6 +17,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(cors());
 
 app.use('/info', infoRouter);
+app.use('/logout', logoutRouter);
 app.use('/signup', signupRouter);
 app.use('/signin', signinRouter);
 
