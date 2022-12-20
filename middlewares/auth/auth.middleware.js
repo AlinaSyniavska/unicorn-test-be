@@ -57,7 +57,7 @@ module.exports = {
                 return next(new CustomError('Token not valid', 401));
             }
 
-            // req.user = tokenInfo.user;
+            req.user = tokenInfo.user;
 
             next();
         } catch (e) {

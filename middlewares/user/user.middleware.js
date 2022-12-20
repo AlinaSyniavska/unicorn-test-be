@@ -4,15 +4,15 @@ const {CustomError} = require("../../errors");
 module.exports = {
     isUserPresent: async (req, res, next) => {
         try {
-            const {id} = req.params;
+            const {user} = req;
 
-            const user = await userService.findOne({_id: id});
+            const userFromDB = await userService.findOne({userId: user.userId});
 
-            if (!user) {
-                return next(new CustomError(`User with id ${id} not found`, 404));
+            if (!userFromDB) {
+                return next(new CustomError(`User with id ${user.userId} not found`, 404));
             }
 
-            req.user = user;
+            req.user = userFromDB;
             next();
         } catch (e) {
             next(e);
