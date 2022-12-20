@@ -38,20 +38,20 @@ module.exports = {
         }
     },
 
-    checkAccessToken: async (req, res, next) => {
+    checkBearerToken: async (req, res, next) => {
         try {
-            let accessToken = '';
+            let bearerToken = '';
             const authHeader = req.get(config.AUTHORIZATION);
 
             if (authHeader.startsWith("Bearer ")){
-                accessToken = authHeader.substring(7, authHeader.length);
+                bearerToken = authHeader.substring(7, authHeader.length);
             } else {
                 return next(new CustomError('No token', 401));
             }
 
-            tokenService.checkToken(accessToken);
+            tokenService.checkToken(bearerToken);
 
-            const tokenInfo = await OAuth.findOne({access_token: accessToken}).populate('user');
+            const tokenInfo = await OAuth.findOne({bearer_token: bearerToken}).populate('user');
 
             if (!tokenInfo) {
                 return next(new CustomError('Token not valid', 401));

@@ -6,21 +6,18 @@ const {tokenTypeEnum} = require("../../constants");
 
 module.exports = {
     generateAuthTokens: (payload = {}) => {
-        const access_token = jwt.sign(payload, config.ACCESS_TOKEN, {expiresIn: '10m'});
-        const refresh_token = jwt.sign(payload, config.REFRESH_TOKEN, {expiresIn: '30d'});
+        const bearer_token = jwt.sign(payload, config.BEARER_TOKEN, {expiresIn: '10m'});
 
         return {
-            access_token,
-            refresh_token
+            bearer_token,
         }
     },
 
-    checkToken: (token = '', tokenType = tokenTypeEnum.ACCESS) => {
+    checkToken: (token = '', tokenType = tokenTypeEnum.BEARER) => {
         try {
             let secret;
 
-            if (tokenType === tokenTypeEnum.ACCESS) secret = config.ACCESS_TOKEN;
-            if (tokenType === tokenTypeEnum.REFRESH) secret = config.REFRESH_TOKEN;
+            if (tokenType === tokenTypeEnum.BEARER) secret = config.BEARER_TOKEN;
 
             return jwt.verify(token, secret);
         } catch (e) {

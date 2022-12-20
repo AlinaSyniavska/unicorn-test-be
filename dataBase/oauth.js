@@ -7,12 +7,7 @@ const OAuthSchema = new Schema({
         required: true,
     },
 
-    access_token: {
-        type: String,
-        required: true,
-    },
-
-    refresh_token: {
+    bearer_token: {
         type: String,
         required: true,
     },

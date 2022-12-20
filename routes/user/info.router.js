@@ -4,7 +4,7 @@ const {authMiddleware, userMiddleware} = require("../../middlewares");
 const infoRouter = require('express').Router();
 
 infoRouter.get('/',
-    authMiddleware.checkAccessToken,
+    authMiddleware.checkBearerToken,
     userMiddleware.isUserPresent,
     userController.getOneUser);
 

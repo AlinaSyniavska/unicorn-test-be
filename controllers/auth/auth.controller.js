@@ -1,15 +1,24 @@
-const {passwordService} = require("../../services");
+const {passwordService, tokenService} = require("../../services");
 const {OAuth} = require("../../dataBase");
 
 module.exports = {
   login: async (req, res, next) => {
     try {
-      const { password: hashPassword } = req.user;
+      const { password: hashPassword, _id } = req.user;
       const { password } = req.body;
 
       await passwordService.comparePassword(hashPassword, password);
 
-      res.sendStatus(200);
+      const tokens = tokenService.generateAuthTokens();
+
+      await OAuth.create({
+        user: _id,
+        ...tokens,
+      });
+
+      res.json({
+        ...tokens,
+      });
     } catch (e) {
       next(e);
     }

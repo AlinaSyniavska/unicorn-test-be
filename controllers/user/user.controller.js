@@ -1,5 +1,4 @@
-const {userService, passwordService, tokenService} = require("../../services");
-const {OAuth} = require("../../dataBase");
+const {userService, passwordService} = require("../../services");
 const {creationHelper} = require("../../helpers");
 
 module.exports = {
@@ -8,22 +7,12 @@ module.exports = {
             const {userId, password} = req.body;
 
             const hashPassword = await passwordService.hashPassword(password);
-            const newUser = await userService.createOne({...req.body, password: hashPassword});
-
-            const tokens = tokenService.generateAuthTokens();
-
-            await OAuth.create({
-                user: newUser._id,
-                ...tokens,
-            });
-
-            res.status(201).json({
-                ...tokens,
-            });
+            await userService.createOne({...req.body, password: hashPassword});
 
             const idType = creationHelper.defineType(userId);
-            await userService.updateOne({userId}, {idType});
+            const newUser = await userService.updateOne({userId}, {idType});
 
+            res.status(201).json(newUser);
         } catch (e) {
             next(e);
         }

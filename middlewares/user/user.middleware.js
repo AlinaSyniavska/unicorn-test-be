@@ -26,10 +26,9 @@ module.exports = {
             const user = await userService.findOne({userId});
 
             if (user) {
-                return next(new CustomError(`User with email ${userId} is exist`, 409));
+                return next(new CustomError(`User with id ${userId} is exist`, 409));
             }
 
-            // req.user = user;
             next();
         } catch (e) {
             next(e);
