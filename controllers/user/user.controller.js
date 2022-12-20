@@ -1,5 +1,6 @@
 const {userService, passwordService, tokenService} = require("../../services");
 const {OAuth} = require("../../dataBase");
+const {creationHelper} = require("../../helpers");
 
 module.exports = {
     getAll: async (req, res, next) => {
@@ -21,8 +22,6 @@ module.exports = {
             const hashPassword = await passwordService.hashPassword(password);
             const newUser = await userService.createOne({...req.body, password: hashPassword});
 
-            console.log(newUser)
-
             const tokens = tokenService.generateAuthTokens();
 
             await OAuth.create({
@@ -34,8 +33,8 @@ module.exports = {
                 ...tokens,
             });
 
-
-            // After signup add field `id_type` - phone or email
+            const idType = creationHelper.defineType(userId);
+            await userService.updateOne({userId}, {idType});
 
         } catch (e) {
             next(e);
@@ -59,13 +58,8 @@ module.exports = {
     update: async (req, res, next) => {
         try {
             const {id} = req.params;
-            let updatedUser;
 
-            if (req.body.favoriteList) {
-                updatedUser = await userService.updateFavoriteList({_id: id}, req.body);
-            } else {
-                updatedUser = await userService.updateOne({_id: id}, req.body);
-            }
+            const updatedUser = await userService.updateOne({_id: id}, req.body);
 
             res.status(201).json(updatedUser);
         } catch (e) {
