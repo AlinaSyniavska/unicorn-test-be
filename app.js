@@ -5,7 +5,7 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
-const {signupRouter} = require("./routes");
+const {signupRouter, signinRouter} = require("./routes");
 
 mongoose.connect(config.MONGO_URL);
 
@@ -17,6 +17,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(cors());
 
 app.use('/signup', signupRouter);
+app.use('/signin', signinRouter);
 
 app.use('*', (req, res) => {
     res.status(404).json('Route not found');

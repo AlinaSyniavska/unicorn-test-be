@@ -3,7 +3,6 @@ const {CustomError} = require("../../errors");
 const {userService, tokenService} = require("../../services");
 const {config} = require("../../configs");
 const {OAuth} = require("../../dataBase");
-const {tokenTypeEnum} = require("../../constants");
 
 module.exports = {
     isLoginBodyValid: (req, res, next) => {
@@ -28,7 +27,6 @@ module.exports = {
             const userById = await userService.findOne({userId});
 
             if (!userById) {
-                // return next(new CustomError(`User with id ${email} not found`, 404));
                 return next(new CustomError('Wrong email or password'));
             }
 
@@ -53,41 +51,13 @@ module.exports = {
 
             tokenService.checkToken(accessToken);
 
-            const tokenInfo = await OAuth.findOne({access_token: accessToken}).populate('userId');
+            const tokenInfo = await OAuth.findOne({access_token: accessToken}).populate('user');
 
             if (!tokenInfo) {
                 return next(new CustomError('Token not valid', 401));
             }
 
-            req.access_token = tokenInfo.access_token;
-            req.user = tokenInfo.userId;
-
-            next();
-        } catch (e) {
-            next(e);
-        }
-    },
-
-    checkRefreshToken: async (req, res, next) => {
-        try {
-            let refreshToken = '';
-            const authHeader = req.get(config.AUTHORIZATION);
-
-            if (authHeader.startsWith("Bearer ")){
-                refreshToken = authHeader.substring(7, authHeader.length);
-            } else {
-                return next(new CustomError('No token', 401));
-            }
-
-            tokenService.checkToken(refreshToken, tokenTypeEnum.REFRESH);
-
-            const tokenInfo = await OAuth.findOne({refresh_token: refreshToken});
-
-            if (!tokenInfo) {
-                return next(new CustomError('Token not valid', 401));
-            }
-
-            req.tokenInfo = tokenInfo;
+            // req.user = tokenInfo.user;
 
             next();
         } catch (e) {

@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "dev": "pm2 start app.js --name mainServer --watch --attach"
+    "dev": "pm2 start app.js --name mainServer --watch --attach",
+    "kill": "pm2 kill"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
